@@ -1,0 +1,15 @@
+{
+  "trip_name": "Vegas show trip",
+  "departure_id": "SLC",
+  "arrival_id": "LAS",
+  "outbound_date": "2027-06-23",
+  "return_date": "2027-06-26",
+  "adults": 3,
+  "include_airlines": "DL,WN",
+  "stops": 1,
+  "currency": "USD",
+  "target_price": null,
+  "min_drop_to_alert": 5,
+  "monthly_request_cap": 200,
+  "fetch_return_details_on_alert": true
+}

@@ -1,0 +1,41 @@
+name: Track flight price
+
+on:
+  schedule:
+    # Twice a day: 14:17 and 02:17 UTC = about 7:17 AM and 7:17 PM Mountain
+    # (an hour later during daylight time). ~60 searches/month.
+    - cron: "17 14 * * *"
+    - cron: "17 2 * * *"
+  workflow_dispatch: {}   # adds a "Run workflow" button for manual checks
+
+permissions:
+  contents: write         # lets the job save price history back to the repo
+
+concurrency:
+  group: flight-tracker
+  cancel-in-progress: false
+
+jobs:
+  track:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check price
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: python flight_tracker.py
+
+      - name: Save price history
+        if: always()
+        run: |
+          git config user.name "flight-tracker"
+          git config user.email "flight-tracker@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "Price check $(date -u '+%Y-%m-%d %H:%M')"
+          git push
