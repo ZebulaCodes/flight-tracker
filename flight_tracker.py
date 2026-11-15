@@ -252,6 +252,10 @@ def main():
         reasons.append(f"New low (was {money(prev_low, currency)})")
     if target is not None and price <= target and (prev_price is None or prev_price > target):
         reasons.append(f"At or below your target of {money(target, currency)}")
+    near = cfg.get("near_target_margin")
+    if target is not None and near and target < price <= target + near and \
+            (prev_price is None or prev_price > target + near):
+        reasons.append(f"Getting close: within {money(near, currency)} of your target")
     if level == "low" and prev_level not in (None, "low"):
         reasons.append("Google now rates this price as LOW")
 
@@ -288,7 +292,11 @@ def main():
         lines.append(f"Lowest seen: {money(state['lowest_price'], currency)}")
         lines.append(f"Searches used this month: {state['requests_this_month']}")
 
-        is_good = any(r.startswith(("New low", "At or below", "Google now")) for r in reasons)
+        if target is not None:
+            lines.append(f"Your target: {money(target, currency)} "
+                         f"(about {money(target / cfg.get('adults', 1), currency)} each)")
+        is_good = any(r.startswith(("New low", "At or below", "Google now", "Getting close"))
+                      for r in reasons)
         notify(f"{cfg.get('trip_name', 'Flights')}: " + "; ".join(reasons),
                "\n".join(lines), click_url=google_url,
                priority="high" if is_good else "default",

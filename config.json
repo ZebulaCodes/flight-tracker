@@ -8,7 +8,8 @@
   "include_airlines": "DL,WN",
   "stops": 1,
   "currency": "USD",
-  "target_price": null,
+  "target_price": 600,
+  "near_target_margin": 75,
   "min_drop_to_alert": 5,
   "monthly_request_cap": 200,
   "fetch_return_details_on_alert": true
