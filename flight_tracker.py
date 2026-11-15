@@ -122,6 +122,9 @@ def search_flights(cfg, api_key, departure_token=None):
     }
     if cfg.get("include_airlines"):
         params["include_airlines"] = cfg["include_airlines"]
+    if cfg.get("exclude_basic"):
+        params["exclude_basic"] = "true"   # only fares with seat selection + carry-on
+        params["travel_class"] = "1"       # economy (required for exclude_basic)
     if departure_token:
         params["departure_token"] = departure_token
     data = http_get_json(SERPAPI_URL, params)

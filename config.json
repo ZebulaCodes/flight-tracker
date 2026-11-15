@@ -6,6 +6,7 @@
   "return_date": "2027-06-26",
   "adults": 3,
   "include_airlines": "DL,WN",
+  "exclude_basic": true,
   "stops": 1,
   "currency": "USD",
   "target_price": 600,
